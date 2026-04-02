@@ -9,7 +9,7 @@ An n8n workflow that automatically researches anyone who books a call with you a
 ## How it works
 
 1. Someone books a meeting on your Cal.com page
-2. The workflow enriches their profile using LimaData (via LinkedIn URL or email)
+2. The workflow enriches their profile using LimaData (via Profile URL or email)
 3. Claude generates a structured meeting prep brief
 4. The brief is converted to HTML and emailed to you via Gmail
 
@@ -22,7 +22,7 @@ Every booking gets researched. If the person provided their LinkedIn URL, enrich
 - Career trajectory and patterns
 - Domain expertise and skills
 - Education and credentials
-- Recent LinkedIn activity and interests
+- Recent Profile activity and interests
 - Notable details (side projects, publications, volunteer work)
 
 ## Cost
@@ -47,7 +47,7 @@ Every booking gets researched. If the person provided their LinkedIn URL, enrich
 
 ### Step 1 — Import the workflow
 
-Download `Meeting_Prep_Agent_v2.json` and import it into n8n via **Settings → Import Workflow**.
+Download `Meeting_Prep_Agent.json` and import it into n8n via **Settings → Import Workflow**.
 
 ### Step 2 — Configure credentials
 
@@ -55,7 +55,7 @@ Open each of these nodes and add your credentials:
 
 | Node | What to set |
 |------|-------------|
-| **Enrich via LinkedIn** | Replace `YOUR_LIMADATA_API_KEY` in the header parameters |
+| **Enrich via Profile** | Replace `YOUR_LIMADATA_API_KEY` in the header parameters |
 | **Enrich via Email** | Same — replace `YOUR_LIMADATA_API_KEY` |
 | **Message a model** | Connect your Anthropic API credential |
 | **Notify admin** | Connect your Gmail OAuth credential and set your email in the `sendTo` field |
@@ -117,8 +117,6 @@ LinkedIn    Email
 ## Customisation
 
 **Different scheduler?** Replace the Webhook + Route Events nodes with a Calendly or Google Calendar trigger. The rest of the workflow stays the same — just make sure you map the booking fields correctly in the Map Needed Fields node.
-
-**Different enrichment provider?** Swap the HTTP Request nodes. [Proxycurl](https://nubela.co/proxycurl/) is a popular alternative — `GET https://nubela.co/proxycurl/api/v2/linkedin?url={url}` with a Bearer token. Update the Edit Bio mappings to match their response schema.
 
 **Different AI model?** Replace the Claude node with any LLM node in n8n (OpenAI, Gemini, Ollama for fully local). The system prompt in the messages field works with any model.
 
