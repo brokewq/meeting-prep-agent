@@ -1,8 +1,8 @@
-# Meeting Prep Agent 
+# Meeting Prep Agent
 
 An n8n workflow that automatically researches anyone who books a call with you and delivers a ready-to-read briefing to your inbox — before the meeting starts.
 
-**Built with:** n8n (self-hosted) · Cal.com · LimaData API · Google Gemini 2.5 Flash · Gmail
+**Built with:** n8n (self-hosted) · Cal.com · LimaData API · Claude · Gmail
 
 ---
 
@@ -10,7 +10,7 @@ An n8n workflow that automatically researches anyone who books a call with you a
 
 1. Someone books a meeting on your Cal.com page
 2. The workflow enriches their profile using LimaData (via LinkedIn URL or email)
-3. Gemini 2.5 Flash generates a structured meeting prep brief
+3. Claude generates a structured meeting prep brief
 4. The brief is converted to HTML and emailed to you via Gmail
 
 Every booking gets researched. If the person provided their LinkedIn URL, enrichment uses that (1 credit). If they only gave their email, it falls back to email-based lookup (5 credits). No dead ends.
@@ -31,7 +31,7 @@ Every booking gets researched. If the person provided their LinkedIn URL, enrich
 |------|------|
 | n8n | Free (self-hosted) |
 | Cal.com | Free tier |
-| Gemini 2.5 Flash | Free (Google AI Studio API key) |
+| Claude | Anthropic API key required |
 | LimaData | 1-5 credits per lookup (free tier available) |
 | Gmail | Free |
 
@@ -42,7 +42,7 @@ Every booking gets researched. If the person provided their LinkedIn URL, enrich
 - [n8n](https://n8n.io/) installed and running (local or cloud)
 - A [Cal.com](https://cal.com/) account with at least one event type
 - A [LimaData](https://limadata.com/) API key
-- A [Google AI Studio](https://aistudio.google.com/) API key (free, no credit card required)
+- An [Anthropic](https://console.anthropic.com/) API key
 - A Gmail account with OAuth configured in n8n
 
 ### Step 1 — Import the workflow
@@ -57,7 +57,7 @@ Open each of these nodes and add your credentials:
 |------|-------------|
 | **Enrich via LinkedIn** | Replace `YOUR_LIMADATA_API_KEY` in the header parameters |
 | **Enrich via Email** | Same — replace `YOUR_LIMADATA_API_KEY` |
-| **Message a model** | Connect your Google Gemini (PaLM) API credential |
+| **Message a model** | Connect your Anthropic API credential |
 | **Notify admin** | Connect your Gmail OAuth credential and set your email in the `sendTo` field |
 
 ### Step 3 — Set up Cal.com webhook
@@ -107,7 +107,7 @@ LinkedIn    Email
     ↘       ↙
    Edit Bio
       ↓
- Gemini 2.5 Flash
+    Claude
       ↓
  Markdown → HTML
       ↓
@@ -120,7 +120,7 @@ LinkedIn    Email
 
 **Different enrichment provider?** Swap the HTTP Request nodes. [Proxycurl](https://nubela.co/proxycurl/) is a popular alternative — `GET https://nubela.co/proxycurl/api/v2/linkedin?url={url}` with a Bearer token. Update the Edit Bio mappings to match their response schema.
 
-**Different AI model?** Replace the Gemini node with any LLM node in n8n (OpenAI, Anthropic via OpenRouter, Ollama for fully local). The system prompt in the messages field works with any model.
+**Different AI model?** Replace the Claude node with any LLM node in n8n (OpenAI, Gemini, Ollama for fully local). The system prompt in the messages field works with any model.
 
 **Want a CRM?** Add an Airtable, Notion, or HubSpot node after Map Needed Fields to store booking data, and another after the Gmail node to save the meeting brief back.
 
@@ -134,9 +134,9 @@ LinkedIn    Email
 **LimaData returns empty or partial data**
 - The Enrich Person endpoint returns a lightweight profile (name, headline, about, location, education). For full experience/company data, consider using their Person endpoint (`GET /api/v1/person`) instead.
 
-**Gemini returns empty response**
+**Claude returns empty response**
 - Confirm the user message (text field) is set to pass the enriched data: `={{ JSON.stringify($json) }}`
-- Check your API key is valid at [aistudio.google.com](https://aistudio.google.com/)
+- Check your API key is valid at [console.anthropic.com](https://console.anthropic.com/)
 
 **Gmail node fails**
 - Re-authenticate your Gmail OAuth credential in n8n
