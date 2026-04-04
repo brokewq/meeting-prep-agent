@@ -13,7 +13,7 @@ An n8n workflow that automatically researches anyone who books a call with you a
 3. Claude generates a structured meeting prep brief
 4. The brief is converted to HTML and emailed to you via Gmail
 
-Every booking gets researched. If the person provided their LinkedIn URL, enrichment uses that (1 credit). If they only gave their email, it falls back to email-based lookup (5 credits). No dead ends.
+Every booking gets researched. If the person provided their Profile url URL, enrichment uses that (1 credit). If they only gave their email, it falls back to email-based lookup (5 credits). No dead ends.
 
 ## What the AI brief includes
 
@@ -78,7 +78,7 @@ In your Cal.com event type, go to **Advanced → Booking Questions** and add the
 
 | Label | Identifier | Input type | Required |
 |-------|-----------|------------|----------|
-| Linkedin | `Linkedin` (capital L) | URL | No |
+| Profile url | `Profile url` (capital L) | URL | No |
 | Business Website | `business-website` | URL | No |
 | Agenda | `agenda` | Long text | No |
 
@@ -102,7 +102,7 @@ Cal.com Webhook
       ↓
  Route Enrichment
     ↙       ↘
-LinkedIn    Email
+Profile url    Email
 (1 credit)  (5 credits)
     ↘       ↙
    Edit Bio
